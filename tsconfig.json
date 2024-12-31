@@ -14,6 +14,7 @@
     "noEmit": true,
     "useDefineForClassFields": true,
     "sourceMap": true,
+    "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "types": [],
     "paths": {
@@ -31,6 +32,8 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "api/**/*.ts",
+    "utils/*.ts",
     "env.d.ts",
     "vite.config.ts"
   ],
