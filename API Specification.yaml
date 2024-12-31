@@ -1,0 +1,333 @@
+openapi: 3.0.3
+info:
+  title: UI-Town
+  version: 1.0.0
+components:
+  schemas:
+    CSSObject:
+      type: object
+      description: each object represent a CSS
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        viewed_time:
+          type: integer
+        author_id:
+          type: integer
+        html:
+          type: string
+        css:
+          type: string
+        category:
+          type: string
+    CSSCategory:
+      type: string
+      description: the category of a CSS
+      enum:
+        - button
+        - checkbox
+        - toggle switch
+        - card
+        - loader
+        - input
+        - transition
+        - special effect
+    CSSOrder:
+      type: string
+      description: things that ordering CSS can be based on
+      enum:
+        - id
+        - name
+        - viewed_time
+  responses:
+    '400':
+      description: Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: description of what went wrong
+paths:
+  /api/css:
+    get:
+      summary: Fetching CSS By IDs
+      description: |
+        Due to the length limitation of URL, do not retrieve more than 200 object at once.  
+        The response will be in the form of a json array of objects containing every information regarding the requested CSS objects.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            oneOf:
+              - type: integer
+              - type: array
+                items:
+                  type: integer
+          description: id(s) of the CSS
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CSSObject'
+        '400':
+          $ref: '#/components/responses/400'
+    post:
+      summary: Upload CSS
+      description: create a new CSS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userID:
+                  type: number
+                  description: id of the creator of this CSS
+                password_hashed:
+                  type: string
+                  description: hashed password (sha256) of the user
+                name:
+                  type: string
+                  description: name of this CSS
+                html:
+                  type: string
+                  description: the HTML portion
+                css:
+                  type: string
+                  description: the CSS portion
+                category:
+                  $ref: '#/components/schemas/CSSCategory'
+              required:
+                - userID
+                - password_hashed
+                - name
+                - html
+                - css
+                - category
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: the ID of the CSS just created
+        '400':
+          $ref: '#/components/responses/400'
+    patch:
+      summary: Update Existing CSS
+      description: update existing css base on id and creator verification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                  description: id of the CSS
+                password_hashed:
+                  type: string
+                  description: password_hashed of the creator of the CSS
+                name:
+                  type: string
+                html:
+                  type: string
+                css:
+                  type: string
+                category:
+                  $ref: '#/components/schemas/CSSCategory'
+              required:
+                - id
+                - password_hashed
+      responses:
+        200:
+          description: Ok
+        400:
+          $ref: '#/components/responses/400'
+    delete:
+      summary: Delete CSS
+      description: delete a CSS base on id
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: password_hashed
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+        '400':
+          $ref: '#/components/responses/400'
+  /api/css/valid:
+    get:
+      summary: Fetching IDs Of Existing CSS
+      description:
+        get the IDs of the existing CSS in the database
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/CSSCategory'
+          description: select only the IDs of CSSs that belongs to category `category`
+        - name: author_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: select only the IDs of CSSs that belongs to author with ID `author_id`
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          description: select `limit` number of IDs at once
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+          description: |
+            jump `offset` number of IDs before parameter `limit` takes place  
+            will be ignored unless `limit` is provided
+        - name: order
+          in: query
+          required: false
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/CSSOrder'
+              - type: array
+                items:
+                  $ref: '#/components/schemas/CSSOrder'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  description: IDs
+        '400':
+          $ref: '#/components/responses/400'
+  /api/users:
+    get:
+      summary: Fetch User Information
+      description: |
+        fetch user information based on id
+        password_hashed is required
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: password_hashed
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  password_hashed:
+                    type: string
+        '400':
+          $ref: '#/components/responses/400'
+    patch:
+      summary: Update User Information
+      description: |
+        update user information
+        password_hashed is required
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+                password_hashed:
+                  type: string
+                name:
+                  type: string
+                email:
+                  type: string
+                new_password_hashed:
+                  type: string
+                description:
+                  type: string
+                icon:
+                  type: string
+                  description: Base64
+                icon_type:
+                  type: string
+                  description: type of image
+              required:
+                - id
+                - password_hashed
+      responses:
+        '200':
+          description: OK
+        '400':
+          $ref: '#/components/responses/400'
+  /api/users/login:
+    get:
+      summary: Validate User Password
+      description: |
+        get whether the hashed (sha256) password provided is true/false  
+        only one of the identification query params (`id`/`email`) is required
+      parameters:
+        - name: email
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: password_hashed
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: integer
+                description: positive integer representing the id if the (hashed) password is correct, -1 otherwise
+        '400':
+          $ref: '#/components/responses/400'
