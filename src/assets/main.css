@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#app {
+    @apply font-[Arial] bg-[linear-gradient(135deg,black,#737373)] min-h-screen max-h-screen overflow-auto [scrollbar-width:none];
+}
+
+@font-face {
+    font-family: 'Zhi Mang Xing';
+    src: url("@/assets/ZhiMangXing-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cooljazz';
+    src: url("@/assets/Cooljazz.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Amsterdam';
+    src: url("@/assets/Amsterdam.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.cm-editor {
+    background-color: transparent !important;
+}
+
+.cm-focused {
+    outline: none !important;
+}
+
+.cm-gutters {
+    background-color: #272727 !important;
+    border: none !important;
+}
+
+.cm-activeLineGutter {
+    background-color: transparent !important;
+}
+
+.cm-activeLine {
+    background-color: transparent !important;
+}
+
+.cm-scroller {
+    scrollbar-width: thin;
+    scrollbar-color: #545454 #00000000;
+}
