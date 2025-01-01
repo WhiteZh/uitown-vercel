@@ -1,4 +1,8 @@
+module uitown-vercel
+
 go 1.23
 
-module uitown-vercel
+require "github.com/lib/pq" v1.10.9
+
+
 

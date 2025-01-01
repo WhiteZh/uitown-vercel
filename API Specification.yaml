@@ -4,6 +4,14 @@ info:
   version: 1.0.0
 components:
   schemas:
+    ErrorResponse:
+      description: Response schema used when error occurs
+      type: object
+      properties:
+        error:
+          type: string
+          description: |
+            Error message.
     CSSObject:
       type: object
       description: each object represent a CSS
@@ -42,16 +50,18 @@ components:
         - name
         - viewed_time
   responses:
-    '400':
-      description: Error
+    500:
+      description: Internal Server Error
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: description of what went wrong
+            $ref: "#/components/schemas/ErrorResponse"
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
 paths:
   /api/css:
     get:
@@ -329,5 +339,7 @@ paths:
               schema:
                 type: integer
                 description: positive integer representing the id if the (hashed) password is correct, -1 otherwise
+        500:
+          $ref: "#/components/responses/500"
         '400':
           $ref: '#/components/responses/400'
