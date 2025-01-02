@@ -53,9 +53,10 @@ components:
     500:
       description: Internal Server Error
       content:
-        application/json:
+        text/plain:
           schema:
-            $ref: "#/components/schemas/ErrorResponse"
+            description: Error Messages.
+            type: string
     '400':
       description: Bad Request
       content:
@@ -89,6 +90,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CSSObject'
+        500:
+          $ref: "#/components/responses/500"
         '400':
           $ref: '#/components/responses/400'
     post:

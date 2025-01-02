@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 	"uitown-vercel/lib/utils"
 )
@@ -14,9 +12,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 var methodRouter = utils.MethodRouter{
 	Get: func(w http.ResponseWriter, r *http.Request) {
 
-		var db = utils.TryConnectDB(w)
-		defer utils.TryCloseDB(db, w)
-
 		var queries = r.URL.Query()
 
 		var email = queries.Get("email")
@@ -27,15 +22,15 @@ var methodRouter = utils.MethodRouter{
 			return
 		}
 
+		var db = utils.ConnectDBOrFatal()
+		defer utils.CloseDBOrFatal(db)
+
 		var id int
 		var associatedPasswordHashed string
 
-		var row = db.QueryRow(`SELECT id, password_hashed FROM users WHERE email = $1`, email)
+		var row = utils.QueryRowDBOrFatal(db, `SELECT id, password_hashed FROM users WHERE email = $1`, email)
 
-		if err := row.Scan(&id, &associatedPasswordHashed); err != nil {
-			utils.WriteInternalErrorResponse(w)
-			log.Fatal(err)
-		}
+		utils.ScanOrFatal(row, &id, &associatedPasswordHashed)
 
 		var res int
 
@@ -45,9 +40,7 @@ var methodRouter = utils.MethodRouter{
 			res = id
 		}
 
-		if err := json.NewEncoder(w).Encode(res); err != nil {
-			utils.WriteInternalErrorResponse(w)
-			log.Fatal(err)
-		}
+		utils.SetContentTypeJSON(w)
+		utils.EncodeJSONOrFatal(w, res)
 	},
 }

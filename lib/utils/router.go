@@ -3,7 +3,8 @@ package utils
 import "net/http"
 
 type MethodRouter struct {
-	Get, Post, Patch, Delete, Put func(w http.ResponseWriter, r *http.Request)
+	Get, Post, Patch, Delete, Put HandlerType
+	MiddleWares                   []HandlerType
 }
 
 func notImplementedHandler(w http.ResponseWriter, _ *http.Request) {
@@ -11,6 +12,12 @@ func notImplementedHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (m *MethodRouter) Route(w http.ResponseWriter, r *http.Request) {
+
+	if m.MiddleWares != nil {
+		for _, middleWare := range m.MiddleWares {
+			middleWare(w, r)
+		}
+	}
 
 	var handler = notImplementedHandler
 
