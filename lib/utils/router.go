@@ -6,39 +6,26 @@ type MethodRouter struct {
 	Get, Post, Patch, Delete, Put func(w http.ResponseWriter, r *http.Request)
 }
 
+func notImplementedHandler(w http.ResponseWriter, _ *http.Request) {
+	WriteNotImplementedResponse(w)
+}
+
 func (m *MethodRouter) Route(w http.ResponseWriter, r *http.Request) {
+
+	var handler = notImplementedHandler
+
 	switch r.Method {
 	case http.MethodGet:
-		if m.Get == nil {
-			WriteNotImplementedResponse(w)
-			break
-		}
-		m.Get(w, r)
+		handler = m.Get
 	case http.MethodPost:
-		if m.Post == nil {
-			WriteNotImplementedResponse(w)
-			break
-		}
-		m.Post(w, r)
+		handler = m.Post
 	case http.MethodPatch:
-		if m.Patch == nil {
-			WriteNotImplementedResponse(w)
-			break
-		}
-		m.Patch(w, r)
+		handler = m.Patch
 	case http.MethodDelete:
-		if m.Delete == nil {
-			WriteNotImplementedResponse(w)
-			break
-		}
-		m.Delete(w, r)
+		handler = m.Delete
 	case http.MethodPut:
-		if m.Put == nil {
-			WriteNotImplementedResponse(w)
-			break
-		}
-		m.Put(w, r)
-	default:
-		WriteNotImplementedResponse(w)
+		handler = m.Put
 	}
+
+	handler(w, r)
 }
