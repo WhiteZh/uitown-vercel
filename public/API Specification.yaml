@@ -57,6 +57,12 @@ components:
           schema:
             description: Error Messages.
             type: string
+    401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
     '400':
       description: Bad Request
       content:
@@ -284,6 +290,10 @@ paths:
                       - type: string
                       - type: "null"
                     description: Data URL.
+        500:
+          $ref: "#/components/responses/500"
+        401:
+          $ref: '#/components/responses/401'
         '400':
           $ref: '#/components/responses/400'
     patch:
