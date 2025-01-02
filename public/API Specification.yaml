@@ -277,6 +277,13 @@ paths:
                     type: string
                   password_hashed:
                     type: string
+                  aboutme:
+                    type: string
+                  icon:
+                    oneOf:
+                      - type: string
+                      - type: "null"
+                    description: Data URL.
         '400':
           $ref: '#/components/responses/400'
     patch:
