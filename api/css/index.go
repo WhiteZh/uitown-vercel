@@ -29,7 +29,7 @@ var methodRouter = utils.MethodRouter{
 
 		var rows = utils.QueryDBOrFatal(db, `SELECT css.id, css.name, css.viewed_time, css.author_id, css.html, css.css, css.category FROM css WHERE id = ANY($1)`, pq.Array(ids))
 
-		type ResSchema struct {
+		type Response struct {
 			Id         int    `json:"id"`
 			Name       string `json:"name"`
 			ViewedTime int    `json:"viewed_time"`
@@ -39,10 +39,10 @@ var methodRouter = utils.MethodRouter{
 			Category   string `json:"category"`
 		}
 
-		var res = make([]ResSchema, len(ids))
+		var res = make([]Response, len(ids))
 
 		for i := 0; rows.Next(); i++ {
-			t := ResSchema{}
+			t := Response{}
 
 			utils.ScanOrFatal(rows, &t.Id, &t.Name, &t.ViewedTime, &t.AuthorId, &t.HTML, &t.CSS, &t.Category)
 
