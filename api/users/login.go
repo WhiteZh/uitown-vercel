@@ -8,40 +8,46 @@ import (
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+	methodRouter.Route(w, r)
+}
 
-	var db = utils.TryConnectDB(w)
-	defer utils.TryCloseDB(db, w)
+var methodRouter = utils.MethodRouter{
+	Get: func(w http.ResponseWriter, r *http.Request) {
 
-	var queries = r.URL.Query()
+		var db = utils.TryConnectDB(w)
+		defer utils.TryCloseDB(db, w)
 
-	var email = queries.Get("email")
-	var passwordHashed = queries.Get("password_hashed")
+		var queries = r.URL.Query()
 
-	if email == "" || passwordHashed == "" {
-		utils.WriteBadRequestResponse(w)
-		return
-	}
+		var email = queries.Get("email")
+		var passwordHashed = queries.Get("password_hashed")
 
-	var id int
-	var associatedPasswordHashed string
+		if email == "" || passwordHashed == "" {
+			utils.WriteBadRequestResponse(w)
+			return
+		}
 
-	var row = db.QueryRow(`SELECT id, password_hashed FROM users WHERE email = $1`, email)
+		var id int
+		var associatedPasswordHashed string
 
-	if err := row.Scan(&id, &associatedPasswordHashed); err != nil {
-		utils.WriteInternalErrorResponse(w)
-		log.Fatal(err)
-	}
+		var row = db.QueryRow(`SELECT id, password_hashed FROM users WHERE email = $1`, email)
 
-	var res int
+		if err := row.Scan(&id, &associatedPasswordHashed); err != nil {
+			utils.WriteInternalErrorResponse(w)
+			log.Fatal(err)
+		}
 
-	if associatedPasswordHashed != passwordHashed {
-		res = -1
-	} else {
-		res = id
-	}
+		var res int
 
-	if err := json.NewEncoder(w).Encode(res); err != nil {
-		utils.WriteInternalErrorResponse(w)
-		log.Fatal(err)
-	}
+		if associatedPasswordHashed != passwordHashed {
+			res = -1
+		} else {
+			res = id
+		}
+
+		if err := json.NewEncoder(w).Encode(res); err != nil {
+			utils.WriteInternalErrorResponse(w)
+			log.Fatal(err)
+		}
+	},
 }

@@ -30,3 +30,9 @@ func WriteBadRequestResponse(w http.ResponseWriter) {
 		log.Fatal(err)
 	}
 }
+
+func WriteNotImplementedResponse(w http.ResponseWriter) {
+	if err := WriteErrorResponse(w, "Not Implemented", http.StatusNotImplemented); err != nil {
+		log.Fatal(err)
+	}
+}
