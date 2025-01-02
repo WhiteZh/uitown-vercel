@@ -43,3 +43,10 @@ func WriteNotImplementedResponse(w http.ResponseWriter) {
 		log.Fatal(err)
 	}
 }
+
+func WriteUnauthorizedResponse(w http.ResponseWriter) {
+	err := WriteErrorResponse(w, "Unauthorized", http.StatusUnauthorized)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
