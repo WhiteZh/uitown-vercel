@@ -31,13 +31,15 @@ func WriteErrorResponse(w http.ResponseWriter, message string, statusCode int) e
 //}
 
 func WriteBadRequestResponse(w http.ResponseWriter) {
-	if err := WriteErrorResponse(w, "Bad Request", http.StatusBadRequest); err != nil {
+	err := WriteErrorResponse(w, "Bad Request", http.StatusBadRequest)
+	if err != nil {
 		log.Fatal(err)
 	}
 }
 
 func WriteNotImplementedResponse(w http.ResponseWriter) {
-	if err := WriteErrorResponse(w, "Not Implemented", http.StatusNotImplemented); err != nil {
+	err := WriteErrorResponse(w, "Not Implemented", http.StatusNotImplemented)
+	if err != nil {
 		log.Fatal(err)
 	}
 }

@@ -21,7 +21,8 @@ func ConnectDBOrFatal() *sql.DB {
 }
 
 func CloseDBOrFatal(db *sql.DB) {
-	if err := db.Close(); err != nil {
+	err := db.Close()
+	if err != nil {
 		log.Fatal(err)
 	}
 }
@@ -39,7 +40,8 @@ func QueryDBOrFatal(db *sql.DB, query string, args ...any) *sql.Rows {
 func QueryRowDBOrFatal(db *sql.DB, query string, args ...any) *sql.Row {
 	row := db.QueryRow(query, args...)
 
-	if err := row.Err(); err != nil {
+	err := row.Err()
+	if err != nil {
 		log.Fatal(err)
 	}
 

@@ -19,7 +19,7 @@ func (m *MethodRouter) Route(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	var handler = notImplementedHandler
+	handler := notImplementedHandler
 
 	switch r.Method {
 	case http.MethodGet:
