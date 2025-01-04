@@ -248,6 +248,8 @@ paths:
                 items:
                   type: integer
                   description: IDs
+        500:
+          $ref: "#/components/responses/500"
         '400':
           $ref: '#/components/responses/400'
   /api/users:
