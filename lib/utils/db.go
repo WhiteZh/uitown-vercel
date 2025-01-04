@@ -48,6 +48,13 @@ func QueryRowDBOrFatal(db *sql.DB, query string, args ...any) *sql.Row {
 	return row
 }
 
+func CloseRowsOrFatal(rows *sql.Rows) {
+	err := rows.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 type scanner interface {
 	Scan(dest ...any) error
 }
