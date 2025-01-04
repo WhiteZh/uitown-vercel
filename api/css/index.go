@@ -24,10 +24,10 @@ var methodRouter = utils.MethodRouter{
 			}
 		}
 
-		var db = utils.ConnectDBOrFatal()
-		defer utils.CloseDBOrFatal(db)
+		var db = utils.ConnectDBOrPanic()
+		defer utils.CloseDBOrPanic(db)
 
-		var rows = utils.QueryDBOrFatal(db, `SELECT css.id, css.name, css.viewed_time, css.author_id, css.html, css.css, css.category FROM css WHERE id = ANY($1)`, pq.Array(ids))
+		var rows = utils.QueryDBOrPanic(db, `SELECT css.id, css.name, css.viewed_time, css.author_id, css.html, css.css, css.category FROM css WHERE id = ANY($1)`, pq.Array(ids))
 
 		type Response struct {
 			Id         int    `json:"id"`
@@ -44,12 +44,12 @@ var methodRouter = utils.MethodRouter{
 		for i := 0; rows.Next(); i++ {
 			t := Response{}
 
-			utils.ScanOrFatal(rows, &t.Id, &t.Name, &t.ViewedTime, &t.AuthorId, &t.HTML, &t.CSS, &t.Category)
+			utils.ScanOrPanic(rows, &t.Id, &t.Name, &t.ViewedTime, &t.AuthorId, &t.HTML, &t.CSS, &t.Category)
 
 			res[i] = t
 		}
 
 		utils.SetContentTypeJSON(w)
-		utils.EncodeJSONOrFatal(w, res)
+		utils.EncodeJSONOrPanic(w, res)
 	},
 }

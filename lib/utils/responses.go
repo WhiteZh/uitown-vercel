@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -14,12 +12,12 @@ func SetContentTypeJSON(w http.ResponseWriter) {
 	w.Header().Add("Content-Type", "application/json")
 }
 
-func WriteErrorResponse(w http.ResponseWriter, message string, statusCode int) error {
+func WriteErrorResponse(w http.ResponseWriter, message string, statusCode int) {
 
 	SetContentTypeJSON(w)
 	w.WriteHeader(statusCode)
 
-	return json.NewEncoder(w).Encode(ErrorResponse{
+	EncodeJSONOrPanic(w, ErrorResponse{
 		ErrorMessage: message,
 	})
 }
@@ -31,22 +29,13 @@ func WriteErrorResponse(w http.ResponseWriter, message string, statusCode int) e
 //}
 
 func WriteBadRequestResponse(w http.ResponseWriter) {
-	err := WriteErrorResponse(w, "Bad Request", http.StatusBadRequest)
-	if err != nil {
-		log.Fatal(err)
-	}
+	WriteErrorResponse(w, "Bad Request", http.StatusBadRequest)
 }
 
 func WriteNotImplementedResponse(w http.ResponseWriter) {
-	err := WriteErrorResponse(w, "Not Implemented", http.StatusNotImplemented)
-	if err != nil {
-		log.Fatal(err)
-	}
+	WriteErrorResponse(w, "Not Implemented", http.StatusNotImplemented)
 }
 
 func WriteUnauthorizedResponse(w http.ResponseWriter) {
-	err := WriteErrorResponse(w, "Unauthorized", http.StatusUnauthorized)
-	if err != nil {
-		log.Fatal(err)
-	}
+	WriteErrorResponse(w, "Unauthorized", http.StatusUnauthorized)
 }

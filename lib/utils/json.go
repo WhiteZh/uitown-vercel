@@ -6,9 +6,9 @@ import (
 	"log"
 )
 
-func EncodeJSONOrFatal(w io.Writer, a any) {
+func EncodeJSONOrPanic(w io.Writer, a any) {
 	err := json.NewEncoder(w).Encode(a)
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }

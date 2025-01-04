@@ -36,10 +36,10 @@ var methodRouter = utils.MethodRouter{
 			queryPasswordHashed = queries.Get("password_hashed")
 		}
 
-		db := utils.ConnectDBOrFatal()
-		defer utils.CloseDBOrFatal(db)
+		db := utils.ConnectDBOrPanic()
+		defer utils.CloseDBOrPanic(db)
 
-		row := utils.QueryRowDBOrFatal(db, `SELECT name, email, password_hashed, aboutme, icon, icon_type FROM users WHERE id = $1`, queryId)
+		row := utils.QueryRowDBOrPanic(db, `SELECT name, email, password_hashed, aboutme, icon, icon_type FROM users WHERE id = $1`, queryId)
 
 		qres := struct {
 			Name           string
@@ -49,7 +49,7 @@ var methodRouter = utils.MethodRouter{
 			Icon           *[]byte
 			IconType       *string
 		}{}
-		utils.ScanOrFatal(row, &qres.Name, &qres.Email, &qres.PasswordHashed, &qres.Aboutme, &qres.Icon, &qres.IconType)
+		utils.ScanOrPanic(row, &qres.Name, &qres.Email, &qres.PasswordHashed, &qres.Aboutme, &qres.Icon, &qres.IconType)
 
 		if qres.PasswordHashed != queryPasswordHashed {
 			utils.WriteUnauthorizedResponse(w)
@@ -75,13 +75,13 @@ var methodRouter = utils.MethodRouter{
 
 		if qres.Icon != nil {
 			if qres.IconType == nil {
-				log.Fatal("users.icon is not NULL while users.icon_type is")
+				log.Panic("users.icon is not NULL while users.icon_type is")
 			}
 			dataURL := fmt.Sprintf("data:%s;base64,%s", qres.IconType, base64.StdEncoding.EncodeToString(*qres.Icon))
 			res.Icon = &dataURL
 		}
 
 		utils.SetContentTypeJSON(w)
-		utils.EncodeJSONOrFatal(w, res)
+		utils.EncodeJSONOrPanic(w, res)
 	},
 }

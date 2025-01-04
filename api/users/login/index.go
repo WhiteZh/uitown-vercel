@@ -22,15 +22,15 @@ var methodRouter = utils.MethodRouter{
 			return
 		}
 
-		var db = utils.ConnectDBOrFatal()
-		defer utils.CloseDBOrFatal(db)
+		var db = utils.ConnectDBOrPanic()
+		defer utils.CloseDBOrPanic(db)
 
 		var id int
 		var associatedPasswordHashed string
 
-		var row = utils.QueryRowDBOrFatal(db, `SELECT id, password_hashed FROM users WHERE email = $1`, email)
+		var row = utils.QueryRowDBOrPanic(db, `SELECT id, password_hashed FROM users WHERE email = $1`, email)
 
-		utils.ScanOrFatal(row, &id, &associatedPasswordHashed)
+		utils.ScanOrPanic(row, &id, &associatedPasswordHashed)
 
 		var res int
 
@@ -41,6 +41,6 @@ var methodRouter = utils.MethodRouter{
 		}
 
 		utils.SetContentTypeJSON(w)
-		utils.EncodeJSONOrFatal(w, res)
+		utils.EncodeJSONOrPanic(w, res)
 	},
 }

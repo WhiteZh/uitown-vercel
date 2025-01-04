@@ -60,7 +60,7 @@ func ConvertCssCategoryToString(c CssCategoryType) string {
 	case CssCategorySpecialEffect:
 		return "special_effect"
 	default:
-		log.Fatal("uncovered `CssCategoryType`")
+		log.Panic("uncovered `CssCategoryType`")
 		return ""
 	}
 }

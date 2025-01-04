@@ -133,7 +133,7 @@ var methodRouter = utils.MethodRouter{
 				case orderByViewedTime:
 					order[i] = "viewed_time"
 				default:
-					log.Fatal("uncovered `orderType`")
+					log.Panic("uncovered `orderType`")
 				}
 			}
 
@@ -153,20 +153,20 @@ var methodRouter = utils.MethodRouter{
 
 		log.Println(sqlClause)
 
-		db := utils.ConnectDBOrFatal()
-		defer utils.CloseDBOrFatal(db)
+		db := utils.ConnectDBOrPanic()
+		defer utils.CloseDBOrPanic(db)
 
 		res := make([]int, 0)
 
-		rows := utils.QueryDBOrFatal(db, sqlClause)
-		defer utils.CloseRowsOrFatal(rows)
+		rows := utils.QueryDBOrPanic(db, sqlClause)
+		defer utils.CloseRowsOrPanic(rows)
 		for rows.Next() {
 			var id int
-			utils.ScanOrFatal(rows, &id)
+			utils.ScanOrPanic(rows, &id)
 			res = append(res, id)
 		}
 
 		utils.SetContentTypeJSON(w)
-		utils.EncodeJSONOrFatal(w, res)
+		utils.EncodeJSONOrPanic(w, res)
 	},
 }
