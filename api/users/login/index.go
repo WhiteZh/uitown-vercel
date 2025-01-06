@@ -13,6 +13,11 @@ var methodRouter = utils.MethodRouter{
 	Get: func(w http.ResponseWriter, r *http.Request) {
 
 		var queries = r.URL.Query()
+		err := utils.UnescapeQueryValues(queries)
+		if err != nil {
+			utils.WriteBadRequestResponse(w)
+			return
+		}
 
 		var email = queries.Get("email")
 		var passwordHashed = queries.Get("password_hashed")

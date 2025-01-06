@@ -19,6 +19,11 @@ var methodRouter = utils.MethodRouter{
 		var queryPasswordHashed string
 
 		queries := r.URL.Query()
+		err := utils.UnescapeQueryValues(queries)
+		if err != nil {
+			utils.WriteBadRequestResponse(w)
+			return
+		}
 
 		{
 			rawQueryID := queries.Get("id")

@@ -33,6 +33,11 @@ var methodRouter = utils.MethodRouter{
 
 		{
 			queries := r.URL.Query()
+			err := utils.UnescapeQueryValues(queries)
+			if err != nil {
+				utils.WriteBadRequestResponse(w)
+				return
+			}
 
 			{
 				rawCategory := queries.Get("category")

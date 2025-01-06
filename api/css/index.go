@@ -15,7 +15,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 var methodRouter = utils.MethodRouter{
 	Get: func(w http.ResponseWriter, r *http.Request) {
 
-		var queryIds = r.URL.Query()["id"]
+		queries := r.URL.Query()
+		err := utils.UnescapeQueryValues(queries)
+		if err != nil {
+			utils.WriteBadRequestResponse(w)
+			return
+		}
+
+		var queryIds = queries["id"]
 		var ids = make([]int, len(queryIds))
 		for i, v := range queryIds {
 			if _, err := fmt.Sscanf(v, "%d", &ids[i]); err != nil {

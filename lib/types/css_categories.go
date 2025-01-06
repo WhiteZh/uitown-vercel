@@ -24,7 +24,7 @@ func ConvertStringToCssCategory(s string) (CssCategoryType, error) {
 		return CssCategoryButton, nil
 	case "checkbox":
 		return CssCategoryCheckBox, nil
-	case "toggle_switch":
+	case "toggle switch":
 		return CssCategoryToggleSwitch, nil
 	case "card":
 		return CssCategoryCard, nil
@@ -34,7 +34,7 @@ func ConvertStringToCssCategory(s string) (CssCategoryType, error) {
 		return CssCategoryInput, nil
 	case "transition":
 		return CssCategoryTransition, nil
-	case "special_effect":
+	case "special effect":
 		return CssCategorySpecialEffect, nil
 	default:
 		return -1, errors.New("invalid css category")
@@ -48,7 +48,7 @@ func ConvertCssCategoryToString(c CssCategoryType) string {
 	case CssCategoryCheckBox:
 		return "checkbox"
 	case CssCategoryToggleSwitch:
-		return "toggle_switch"
+		return "toggle switch"
 	case CssCategoryCard:
 		return "card"
 	case CssCategoryLoader:
@@ -58,7 +58,7 @@ func ConvertCssCategoryToString(c CssCategoryType) string {
 	case CssCategoryTransition:
 		return "transition"
 	case CssCategorySpecialEffect:
-		return "special_effect"
+		return "special effect"
 	default:
 		log.Panic("uncovered `CssCategoryType`")
 		return ""
