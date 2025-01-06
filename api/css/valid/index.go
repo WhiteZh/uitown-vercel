@@ -151,8 +151,6 @@ var methodRouter = utils.MethodRouter{
 			sqlClause += offsetClause
 		}
 
-		log.Println(sqlClause)
-
 		db := utils.ConnectDBOrPanic()
 		defer utils.CloseDBOrPanic(db)
 
