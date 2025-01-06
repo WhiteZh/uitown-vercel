@@ -1,6 +1,9 @@
 package utils
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 type MethodRouter struct {
 	Get, Post, Patch, Delete, Put HandlerType
@@ -12,6 +15,8 @@ func notImplementedHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 func (m *MethodRouter) Route(w http.ResponseWriter, r *http.Request) {
+
+	log.Println(r.URL.RequestURI())
 
 	if m.MiddleWares != nil {
 		for _, middleWare := range m.MiddleWares {
