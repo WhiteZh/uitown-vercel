@@ -14,11 +14,11 @@ export default defineConfig({
     }
   },
   server: {
-    // proxy: {
-    //   '/api': {
-    //     target: `http://localhost:${process.env.PROXY_PORT || 80}`,
-    //     changeOrigin: true,
-    //   }
-    // }
+    proxy: {
+      '/api': {
+        target: `http://localhost:${process.env.PROXY_PORT || 3000}`,
+        changeOrigin: true,
+      }
+    }
   }
 })
