@@ -68,6 +68,7 @@ var methodRouter = utils.MethodRouter{
 			PasswordHashed string  `json:"password_hashed"`
 			Aboutme        string  `json:"aboutme"`
 			Icon           *string `json:"icon"`
+			IconType       *string `json:"icon_type"`
 		}
 
 		res := Response{
@@ -82,8 +83,9 @@ var methodRouter = utils.MethodRouter{
 			if qres.IconType == nil {
 				log.Panic("users.icon is not NULL while users.icon_type is")
 			}
-			dataURL := fmt.Sprintf("data:%s;base64,%s", qres.IconType, base64.StdEncoding.EncodeToString(*qres.Icon))
-			res.Icon = &dataURL
+			icon := base64.StdEncoding.EncodeToString(*qres.Icon)
+			res.Icon = &icon
+			res.IconType = qres.IconType
 		}
 
 		utils.SetContentTypeJSON(w)
