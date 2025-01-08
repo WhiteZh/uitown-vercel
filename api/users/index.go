@@ -218,7 +218,7 @@ var methodRouter = utils.MethodRouter{
 			if err != nil {
 				utils.WriteErrorResponse(
 					w,
-					"Unprocessable Entity; most likely because the new name or email conflicts with some existing one(s)",
+					"Unprocessable Entity; most likely due to the new name or email conflict with some existing one(s)",
 					http.StatusUnprocessableEntity)
 				return
 			}
