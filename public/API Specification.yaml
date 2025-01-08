@@ -336,6 +336,17 @@ paths:
           description: OK
         '400':
           $ref: '#/components/responses/400'
+        401:
+          $ref: '#/components/responses/401'
+        422:
+          description: |
+            Unprocessable Entity; most likely due to the new name or email conflict with some existing one(s)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        500:
+          $ref: '#/components/responses/500'
   /api/users/login:
     get:
       summary: Validate User Password
