@@ -144,6 +144,10 @@ paths:
                 description: the ID of the CSS just created
         '400':
           $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        500:
+          $ref: "#/components/responses/500"
     patch:
       summary: Update Existing CSS
       description: update existing css base on id and creator verification
