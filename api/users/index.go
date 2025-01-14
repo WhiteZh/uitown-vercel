@@ -2,6 +2,7 @@ package users
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"log"
 	"maps"
@@ -94,74 +95,35 @@ var methodRouter = utils.MethodRouter{
 		utils.EncodeJSONOrPanic(w, res)
 	},
 	Patch: func(w http.ResponseWriter, r *http.Request) {
-		queries := r.URL.Query()
-		{
-			err := utils.UnescapeQueryValues(queries)
-			if err != nil {
-				utils.WriteBadRequestResponse(w)
-				return
-			}
-		}
 
 		params := struct {
-			id                int
-			passwordHashed    string
-			name              *string
-			email             *string
-			newPasswordHashed *string
-			description       *string
-			icon              *string
-			iconType          *string
+			Id                int     `json:"id"`
+			PasswordHashed    string  `json:"password_hashed"`
+			Name              *string `json:"name"`
+			Email             *string `json:"email"`
+			NewPasswordHashed *string `json:"new_password_hashed"`
+			Aboutme           *string `json:"aboutme"`
+			Icon              *string `json:"icon"`
+			IconType          *string `json:"icon_type"`
 		}{}
-
 		{
-			_, err := fmt.Sscanf(queries.Get("id"), "%d", &params.id)
+			err := json.NewDecoder(r.Body).Decode(&params)
 			if err != nil {
 				utils.WriteBadRequestResponse(w)
 				return
 			}
 		}
 		{
-			params.passwordHashed = queries.Get("password_hashed")
-			if params.passwordHashed == "" {
+			cnt := 0
+			if params.Icon == nil {
+				cnt++
+			}
+			if params.IconType == nil {
+				cnt++
+			}
+			if cnt == 1 {
 				utils.WriteBadRequestResponse(w)
 				return
-			}
-		}
-		{
-			name := queries.Get("name")
-			if name != "" {
-				params.name = &name
-			}
-		}
-		{
-			email := queries.Get("email")
-			if email != "" {
-				params.email = &email
-			}
-		}
-		{
-			newPasswordHashed := queries.Get("new_password_hashed")
-			if newPasswordHashed != "" {
-				params.newPasswordHashed = &newPasswordHashed
-			}
-		}
-		{
-			description := queries.Get("description")
-			if description != "" {
-				params.description = &description
-			}
-		}
-		{
-			icon := queries.Get("icon")
-			iconType := queries.Get("icon_type")
-			if icon != "" {
-				if iconType == "" {
-					utils.WriteBadRequestResponse(w)
-					return
-				}
-				params.icon = &icon
-				params.iconType = &iconType
 			}
 		}
 
@@ -169,35 +131,35 @@ var methodRouter = utils.MethodRouter{
 		defer utils.CloseDBOrPanic(db)
 
 		{
-			row := utils.QueryRowDBOrPanic(db, `SELECT password_hashed FROM users WHERE id = $1`, params.id)
+			row := utils.QueryRowDBOrPanic(db, `SELECT password_hashed FROM users WHERE id = $1`, params.Id)
 			var passwordHashed string
 			utils.ScanOrPanic(row, &passwordHashed)
 
-			if passwordHashed != params.passwordHashed {
+			if passwordHashed != params.PasswordHashed {
 				utils.WriteUnauthorizedResponse(w)
 				return
 			}
 		}
 
 		modColumns := make(map[string]any)
-		if params.name != nil {
-			modColumns["name"] = params.name
+		if params.Name != nil {
+			modColumns["name"] = params.Name
 		}
-		if params.email != nil {
-			modColumns["email"] = params.email
+		if params.Email != nil {
+			modColumns["email"] = params.Email
 		}
-		if params.newPasswordHashed != nil {
-			modColumns["password_hashed"] = params.newPasswordHashed
+		if params.NewPasswordHashed != nil {
+			modColumns["password_hashed"] = params.NewPasswordHashed
 		}
-		if params.description != nil {
-			modColumns["password_hashed"] = params.description
+		if params.Aboutme != nil {
+			modColumns["aboutme"] = params.Aboutme
 		}
-		if params.icon != nil {
-			if params.iconType == nil {
+		if params.Icon != nil {
+			if params.IconType == nil {
 				log.Panicln("miracle happened")
 			}
-			modColumns["icon"] = params.icon
-			modColumns["icon_type"] = params.iconType
+			modColumns["icon"] = params.Icon
+			modColumns["icon_type"] = params.IconType
 		}
 
 		var updateClause string
@@ -214,7 +176,7 @@ var methodRouter = utils.MethodRouter{
 		}
 
 		{
-			_, err := db.Exec(fmt.Sprintf("UPDATE users SET %s WHERE id = %d", updateClause, params.id), updateValues...)
+			_, err := db.Exec(fmt.Sprintf("UPDATE users SET %s WHERE id = %d", updateClause, params.Id), updateValues...)
 			if err != nil {
 				utils.WriteErrorResponse(
 					w,
