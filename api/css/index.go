@@ -36,7 +36,10 @@ var methodRouter = utils.MethodRouter{
 		var db = utils.ConnectDBOrPanic()
 		defer utils.CloseDBOrPanic(db)
 
-		var rows = utils.QueryDBOrPanic(db, `SELECT css.id, css.name, css.viewed_time, css.author_id, css.html, css.css, css.category FROM css WHERE id = ANY($1)`, pq.Array(ids))
+		var rows = utils.QueryDBOrPanic(db,
+			`SELECT css.id, css.name, css.viewed_time, css.author_id, css.html, css.css, css.category FROM css WHERE id = ANY($1)`,
+			pq.Array(ids))
+		defer utils.CloseRowsOrPanic(rows)
 
 		type Response struct {
 			Id         int    `json:"id"`
