@@ -1,8 +1,10 @@
 package css
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"uitown-vercel/lib/types"
 	"uitown-vercel/lib/utils"
 
 	"github.com/lib/pq"
@@ -58,5 +60,73 @@ var methodRouter = utils.MethodRouter{
 
 		utils.SetContentTypeJSON(w)
 		utils.EncodeJSONOrPanic(w, res)
+	},
+	Post: func(w http.ResponseWriter, r *http.Request) {
+
+		var params struct {
+			UserID         int
+			PasswordHashed string
+			Name           string
+			Html           string
+			Css            string
+			Category       types.CssCategoryType
+		}
+		{
+			body := struct {
+				UserID         int    `json:"userID"`
+				PasswordHashed string `json:"password_hashed"`
+				Name           string `json:"name"`
+				Html           string `json:"html"`
+				Css            string `json:"css"`
+				Category       string `json:"category"`
+			}{}
+			{
+				err := json.NewDecoder(r.Body).Decode(&body)
+				if err != nil {
+					utils.WriteBadRequestResponse(w)
+					return
+				}
+			}
+			{
+				category, err := types.ConvertStringToCssCategory(body.Category)
+				if err != nil {
+					utils.WriteBadRequestResponse(w)
+					return
+				}
+				params.Category = category
+			}
+			params.UserID = body.UserID
+			params.PasswordHashed = body.PasswordHashed
+			params.Name = body.Name
+			params.Html = body.Html
+			params.Css = body.Css
+		}
+
+		db := utils.ConnectDBOrPanic()
+		defer utils.CloseDBOrPanic(db)
+
+		{
+			row := utils.QueryRowDBOrPanic(db, "SELECT password_hashed FROM users WHERE id = $1", params.UserID)
+
+			var realPasswordHashed string
+			utils.ScanOrPanic(row, &realPasswordHashed)
+
+			if realPasswordHashed != params.PasswordHashed {
+				utils.WriteUnauthorizedResponse(w)
+				return
+			}
+		}
+
+		var newID int64
+		{
+			row := utils.QueryRowDBOrPanic(db,
+				"INSERT INTO css (name, html, css, category, author_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+				params.Name, params.Html, params.Css, params.Category, params.UserID)
+
+			utils.ScanOrPanic(row, &newID)
+		}
+
+		utils.SetContentTypeJSON(w)
+		utils.EncodeJSONOrPanic(w, newID)
 	},
 }
