@@ -320,7 +320,7 @@ paths:
                   type: string
                 new_password_hashed:
                   type: string
-                description:
+                aboutme:
                   type: string
                 icon:
                   type: string
