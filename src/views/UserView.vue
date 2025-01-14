@@ -105,7 +105,7 @@ const patchUser = async (mode: 'name' | 'description' | 'icon') => {
 
       <div class="px-5 flex flex-col justify-start flex-grow">
         <input @focusout="() => patchUser('name')" ref="nameInput" class="leading-8 text-3xl font-bold bg-transparent outline-0" :value="user.name">
-        <textarea @focusout="() => patchUser('description')" ref="descriptionBox" :value="user.description === '' ? description_default : user.description" class="resize-none outline-0 w-full mt-2 ms-0.5 overflow-scroll overflow-ellipsis max-h-20 [scrollbar-width:none] leading-tight bg-transparent"/>
+        <textarea @focusout="() => patchUser('description')" ref="descriptionBox" :value="user.aboutme === '' ? description_default : user.aboutme" class="resize-none outline-0 w-full mt-2 ms-0.5 overflow-scroll overflow-ellipsis max-h-20 [scrollbar-width:none] leading-tight bg-transparent"/>
       </div>
 
       <div class="flex-shrink-0 text-2xl">

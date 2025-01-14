@@ -72,7 +72,7 @@ export async function getUserById(id: number, password_hashed: string): Promise<
             name: x => typeof x === 'string',
             email: x => typeof x === 'string',
             password_hashed: x => typeof x === 'string',
-            description: x => typeof x === 'string',  //TODO
+            aboutme: x => typeof x === 'string',  //TODO
             icon: x => typeof x === 'string' || x === null,
         });
 

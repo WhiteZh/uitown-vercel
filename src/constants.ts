@@ -78,7 +78,7 @@ export type User = {
     name: string,
     email: string,
     password_hashed: string,
-    description: string,
+    aboutme: string,
     icon: string | null,
 };
 
