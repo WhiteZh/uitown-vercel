@@ -1,6 +1,9 @@
 package login
 
 import (
+	"database/sql"
+	"errors"
+	"log"
 	"net/http"
 	"uitown-vercel/lib/utils"
 )
@@ -33,7 +36,20 @@ var methodRouter = utils.MethodRouter{
 		var id int
 		var associatedPasswordHashed string
 
-		var row = utils.QueryRowDBOrPanic(db, `SELECT id, password_hashed FROM users WHERE email = $1`, email)
+		var row *sql.Row
+		{
+			_row := db.QueryRow(`SELECT id, password_hashed FROM users WHERE email = $1`, email)
+			err := _row.Err()
+			if err != nil {
+				if errors.Is(err, sql.ErrNoRows) {
+					utils.SetContentTypeJSON(w)
+					utils.EncodeJSONOrPanic(w, -1)
+					return
+				}
+				log.Panic(err)
+			}
+			row = _row
+		}
 
 		utils.ScanOrPanic(row, &id, &associatedPasswordHashed)
 
