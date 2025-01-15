@@ -112,7 +112,19 @@ var methodRouter = utils.MethodRouter{
 		defer utils.CloseDBOrPanic(db)
 
 		{
-			row := utils.QueryRowDBOrPanic(db, "SELECT password_hashed FROM users WHERE id = $1", params.UserID)
+			var row *sql.Row
+			{
+				_row := db.QueryRow("SELECT password_hashed FROM users WHERE id = $1", params.UserID)
+				err := _row.Err()
+				if err != nil {
+					if errors.Is(err, sql.ErrNoRows) {
+						utils.WriteErrorResponse(w, "Unprocessable response; user id does not exist", http.StatusUnprocessableEntity)
+						return
+					}
+					log.Panic(err)
+				}
+				row = _row
+			}
 
 			var realPasswordHashed string
 			utils.ScanOrPanic(row, &realPasswordHashed)
