@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -16,7 +17,7 @@ func notImplementedHandler(w http.ResponseWriter, _ *http.Request) {
 
 func (m *MethodRouter) Route(w http.ResponseWriter, r *http.Request) {
 
-	log.Println(r.URL.RequestURI())
+	log.Println(fmt.Sprintf("%s %s", r.Method, r.URL.RequestURI()))
 
 	if m.MiddleWares != nil {
 		for _, middleWare := range m.MiddleWares {
