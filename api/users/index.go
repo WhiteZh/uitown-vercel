@@ -1,8 +1,10 @@
 package users
 
 import (
+	"database/sql"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"maps"
@@ -47,7 +49,17 @@ var methodRouter = utils.MethodRouter{
 		db := utils.ConnectDBOrPanic()
 		defer utils.CloseDBOrPanic(db)
 
-		row := utils.QueryRowDBOrPanic(db, `SELECT name, email, password_hashed, aboutme, icon, icon_type FROM users WHERE id = $1`, queryId)
+		row := db.QueryRow(`SELECT name, email, password_hashed, aboutme, icon, icon_type FROM users WHERE id = $1`, queryId)
+		{
+			err := row.Err()
+			if err != nil {
+				if errors.Is(err, sql.ErrNoRows) {
+					utils.WriteErrorResponse(w, "User ID does not exist", http.StatusNotFound)
+					return
+				}
+				log.Panic(err)
+			}
+		}
 
 		qres := struct {
 			Name           string
