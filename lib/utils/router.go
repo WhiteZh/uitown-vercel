@@ -11,10 +11,6 @@ type MethodRouter struct {
 	MiddleWares                   []HandlerType
 }
 
-func notImplementedHandler(w http.ResponseWriter, _ *http.Request) {
-	WriteNotImplementedResponse(w)
-}
-
 func (m *MethodRouter) Route(w http.ResponseWriter, r *http.Request) {
 
 	log.Println(fmt.Sprintf("%s %s", r.Method, r.URL.RequestURI()))
@@ -25,7 +21,7 @@ func (m *MethodRouter) Route(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	handler := notImplementedHandler
+	var handler HandlerType
 
 	switch r.Method {
 	case http.MethodGet:
@@ -40,5 +36,9 @@ func (m *MethodRouter) Route(w http.ResponseWriter, r *http.Request) {
 		handler = m.Put
 	}
 
-	handler(w, r)
+	if handler != nil {
+		handler(w, r)
+	} else {
+		WriteNotImplementedResponse(w)
+	}
 }
