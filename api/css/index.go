@@ -1,8 +1,11 @@
 package css
 
 import (
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"uitown-vercel/lib/types"
 	"uitown-vercel/lib/utils"
@@ -131,5 +134,59 @@ var methodRouter = utils.MethodRouter{
 
 		utils.SetContentTypeJSON(w)
 		utils.EncodeJSONOrPanic(w, newID)
+	},
+	Delete: func(w http.ResponseWriter, r *http.Request) {
+
+		queries := r.URL.Query()
+		{
+			err := utils.UnescapeQueryValues(queries)
+			if err != nil {
+				utils.WriteUnauthorizedResponse(w)
+				return
+			}
+		}
+
+		params := struct {
+			Id             int
+			PasswordHashed string
+		}{
+			PasswordHashed: queries.Get("password_hashed"),
+		}
+		{
+			var id int
+			_, err := fmt.Sscan(queries.Get("id"), &id)
+			if err != nil {
+				utils.WriteBadRequestResponse(w)
+				return
+			}
+			params.Id = id
+		}
+
+		db := utils.ConnectDBOrPanic()
+		defer utils.CloseDBOrPanic(db)
+
+		{
+			row := utils.QueryRowDBOrPanic(db, "SELECT password_hashed FROM users WHERE id = (SELECT author_id FROM css WHERE id = $1)", params.Id)
+
+			var realPasswordHashed string
+			err := row.Scan(&realPasswordHashed)
+			if err != nil {
+				if errors.Is(err, sql.ErrNoRows) {
+					utils.WriteErrorResponse(w, "Invalid CSS id or its associated author id", http.StatusUnprocessableEntity)
+					return
+				}
+				log.Panic(err)
+				return
+			}
+
+			if realPasswordHashed != params.PasswordHashed {
+				utils.WriteUnauthorizedResponse(w)
+				return
+			}
+		}
+
+		utils.ExecDBOrPanic(db, "DELETE FROM css WHERE id = $1", params.Id)
+
+		w.WriteHeader(http.StatusOK)
 	},
 }

@@ -199,6 +199,17 @@ paths:
           description: Ok
         '400':
           $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        422:
+          description: |
+            Unprocessable Request; id or author id does not exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        500:
+          $ref: "#/components/responses/500"
   /api/css/valid:
     get:
       summary: Fetching IDs Of Existing CSS

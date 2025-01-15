@@ -27,6 +27,13 @@ func CloseDBOrPanic(db *sql.DB) {
 	}
 }
 
+func ExecDBOrPanic(db *sql.DB, query string, args ...any) {
+	_, err := db.Exec(query, args...)
+	if err != nil {
+		log.Panic(err)
+	}
+}
+
 func QueryDBOrPanic(db *sql.DB, query string, args ...any) *sql.Rows {
 	rows, err := db.Query(query, args...)
 
