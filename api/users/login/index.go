@@ -36,10 +36,10 @@ var methodRouter = utils.MethodRouter{
 		var id int
 		var associatedPasswordHashed string
 
-		var row *sql.Row
+		row := db.QueryRow(`SELECT id, password_hashed FROM users WHERE email = $1`, email)
+
 		{
-			_row := db.QueryRow(`SELECT id, password_hashed FROM users WHERE email = $1`, email)
-			err := _row.Err()
+			err := row.Scan(&id, &associatedPasswordHashed)
 			if err != nil {
 				if errors.Is(err, sql.ErrNoRows) {
 					utils.SetContentTypeJSON(w)
@@ -48,10 +48,7 @@ var methodRouter = utils.MethodRouter{
 				}
 				log.Panic(err)
 			}
-			row = _row
 		}
-
-		utils.ScanOrPanic(row, &id, &associatedPasswordHashed)
 
 		var res int
 

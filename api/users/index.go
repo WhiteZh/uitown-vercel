@@ -50,16 +50,6 @@ var methodRouter = utils.MethodRouter{
 		defer utils.CloseDBOrPanic(db)
 
 		row := db.QueryRow(`SELECT name, email, password_hashed, aboutme, icon, icon_type FROM users WHERE id = $1`, queryId)
-		{
-			err := row.Err()
-			if err != nil {
-				if errors.Is(err, sql.ErrNoRows) {
-					utils.WriteErrorResponse(w, "User ID does not exist", http.StatusNotFound)
-					return
-				}
-				log.Panic(err)
-			}
-		}
 
 		qres := struct {
 			Name           string
@@ -69,7 +59,16 @@ var methodRouter = utils.MethodRouter{
 			Icon           *[]byte
 			IconType       *string
 		}{}
-		utils.ScanOrPanic(row, &qres.Name, &qres.Email, &qres.PasswordHashed, &qres.Aboutme, &qres.Icon, &qres.IconType)
+		{
+			err := row.Scan(&qres.Name, &qres.Email, &qres.PasswordHashed, &qres.Aboutme, &qres.Icon, &qres.IconType)
+			if err != nil {
+				if errors.Is(err, sql.ErrNoRows) {
+					utils.WriteErrorResponse(w, "User ID does not exist", http.StatusNotFound)
+					return
+				}
+				log.Panic(err)
+			}
+		}
 
 		if qres.PasswordHashed != queryPasswordHashed {
 			utils.WriteUnauthorizedResponse(w)
