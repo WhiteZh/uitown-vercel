@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"uitown-vercel/lib/types"
 	"uitown-vercel/lib/utils"
 
@@ -146,6 +147,122 @@ var methodRouter = utils.MethodRouter{
 
 		utils.SetContentTypeJSON(w)
 		utils.EncodeJSONOrPanic(w, newID)
+	},
+	Patch: func(w http.ResponseWriter, r *http.Request) {
+
+		var params struct {
+			Id             int
+			PasswordHashed string
+			Name           *string
+			Html           *string
+			Css            *string
+			Category       *types.CssCategoryType
+		}
+		// initialize `params`
+		{
+			body := struct {
+				Id             int     `json:"id"`
+				PasswordHashed string  `json:"password_hashed"`
+				Name           *string `json:"name"`
+				Html           *string `json:"html"`
+				Css            *string `json:"css"`
+				Category       *string `json:"category"`
+			}{}
+			{
+				err := json.NewDecoder(r.Body).Decode(&body)
+				if err != nil {
+					utils.WriteBadRequestResponse(w)
+					return
+				}
+			}
+
+			params.Id = body.Id
+			params.PasswordHashed = body.PasswordHashed
+			params.Name = body.Name
+			params.Html = body.Html
+			params.Css = body.Css
+			if body.Category != nil {
+				category, err := types.ConvertStringToCssCategory(*body.Category)
+				if err != nil {
+					utils.WriteBadRequestResponse(w)
+					return
+				}
+				params.Category = &category
+			}
+		}
+
+		db := utils.ConnectDBOrPanic()
+		defer utils.CloseDBOrPanic(db)
+
+		// validate authentication
+		{
+			var realPasswordHashed string
+			// retrieve `realPasswordHashed`
+			{
+				row := db.QueryRow("SELECT password_hashed FROM users WHERE id = (SELECT author_id FROM css WHERE id = $1)", params.Id)
+				log.Println(params.Id)
+
+				err := row.Scan(&realPasswordHashed)
+				if err != nil {
+					if errors.Is(err, sql.ErrNoRows) {
+						utils.WriteUnauthorizedResponse(w)
+						return
+					}
+					log.Panic(err)
+				}
+			}
+
+			if params.PasswordHashed != realPasswordHashed {
+				utils.WriteUnauthorizedResponse(w)
+				return
+			}
+		}
+
+		// db update
+		{
+			var sqlClause string
+			var columnValues []any
+			// calculate and assign the value of `updateClause` & `updateValues`
+			{
+				var sqlKeys []string
+				cnt := 2 // start with 2 as $1 is id
+
+				if params.Name != nil {
+					sqlKeys = append(sqlKeys, fmt.Sprintf("name = $%d", cnt))
+					cnt++
+					columnValues = append(columnValues, *params.Name)
+				}
+
+				if params.Html != nil {
+					sqlKeys = append(sqlKeys, fmt.Sprintf("html = $%d", cnt))
+					cnt++
+					columnValues = append(columnValues, *params.Html)
+				}
+
+				if params.Css != nil {
+					sqlKeys = append(sqlKeys, fmt.Sprintf("css = $%d", cnt))
+					cnt++
+					columnValues = append(columnValues, *params.Css)
+				}
+
+				if params.Category != nil {
+					sqlKeys = append(sqlKeys, fmt.Sprintf("category = $%d", cnt))
+					cnt++
+					columnValues = append(columnValues, types.ConvertCssCategoryToString(*params.Category))
+				}
+
+				sqlClause = fmt.Sprintf("UPDATE css SET %s WHERE id = $1", strings.Join(sqlKeys, ", "))
+			}
+
+			// if `columnValues` is never updated/be inserted, it will not be initialized and stay nil (as the default value)
+			if columnValues != nil {
+				sqlValues := []any{params.Id}
+				sqlValues = append(sqlValues, columnValues...)
+				utils.ExecDBOrPanic(db, sqlClause, sqlValues...)
+			}
+		}
+
+		w.WriteHeader(http.StatusOK)
 	},
 	Delete: func(w http.ResponseWriter, r *http.Request) {
 
