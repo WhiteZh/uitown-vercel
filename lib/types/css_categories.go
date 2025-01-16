@@ -64,3 +64,7 @@ func ConvertCssCategoryToString(c CssCategoryType) string {
 		return ""
 	}
 }
+
+func (c CssCategoryType) ToString() string {
+	return ConvertCssCategoryToString(c)
+}
