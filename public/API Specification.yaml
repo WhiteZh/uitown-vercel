@@ -187,6 +187,10 @@ paths:
           description: Ok
         400:
           $ref: '#/components/responses/400'
+        401:
+          $ref: "#/components/responses/401"
+        500:
+          $ref: "#/components/responses/500"
     delete:
       summary: Delete CSS
       description: delete a CSS base on id
