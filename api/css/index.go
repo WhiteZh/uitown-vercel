@@ -137,7 +137,7 @@ var methodRouter = utils.MethodRouter{
 		{
 			row := utils.QueryRowDBOrPanic(db,
 				"INSERT INTO css (name, html, css, category, author_id) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-				params.Name, params.Html, params.Css, params.Category, params.UserID)
+				params.Name, params.Html, params.Css, params.Category.ToString(), params.UserID)
 
 			utils.ScanOrPanic(row, &newID)
 		}
