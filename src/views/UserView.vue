@@ -61,7 +61,8 @@ const patchUser = async (mode: 'name' | 'description' | 'icon') => {
           let arrayBuffer = reader.result as ArrayBuffer;
           let byteArray = new Uint8Array(arrayBuffer);
           body.icon = btoa(byteArray.reduce((s: string, v: number) => s + String.fromCharCode(v), ""));
-          body.icon_type = file.name.match(/\..*$/)?.[0] ?? '';
+          body.icon_type = file.name.match(/\.\w*$/)?.[0] ?? '';
+
           resolve();
         }
         reader.readAsArrayBuffer(file);
@@ -97,7 +98,6 @@ const patchUser = async (mode: 'name' | 'description' | 'icon') => {
   <div v-if="user !== undefined" class="max-w-screen-lg bg-[linear-gradient(90deg,#004aad55,#cb6ce655)] h-screen mx-auto flex flex-col justify-start items-stretch lg:px-28 px-5 text-white overflow-scroll">
     <div class="mt-20 flex w-full">
       <input type="file" accept="image/*" class="hidden" ref="iconInput" @change="() => patchUser('icon')"/>
-      <!--TODO you need to implement the actual profile picture-->
       <svg @click="() => iconInput.click()" v-if="user.icon === null" xmlns="http://www.w3.org/2000/svg" height="100%" fill="currentColor" class="cursor-pointer bi bi-person-fill aspect-square h-32 flex-shrink-0 border border-white" viewBox="0 0 16 16">
         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
       </svg>

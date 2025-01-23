@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"maps"
+	"mime"
 	"net/http"
 	"strings"
 	"uitown-vercel/lib/utils"
@@ -82,7 +84,6 @@ var methodRouter = utils.MethodRouter{
 			PasswordHashed string  `json:"password_hashed"`
 			Aboutme        string  `json:"aboutme"`
 			Icon           *string `json:"icon"`
-			IconType       *string `json:"icon_type"`
 		}
 
 		res := Response{
@@ -98,8 +99,8 @@ var methodRouter = utils.MethodRouter{
 				log.Panic("users.icon is not NULL while users.icon_type is")
 			}
 			icon := base64.StdEncoding.EncodeToString(*qres.Icon)
-			res.Icon = &icon
-			res.IconType = qres.IconType
+			dataURL := fmt.Sprintf("data:%s;base64,%s", mime.TypeByExtension(*qres.IconType), icon)
+			res.Icon = &dataURL
 		}
 
 		utils.SetContentTypeJSON(w)
@@ -169,7 +170,15 @@ var methodRouter = utils.MethodRouter{
 			if params.IconType == nil {
 				log.Panicln("miracle happened")
 			}
-			modColumns["icon"] = params.Icon
+			iconReader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(*params.Icon))
+			// readAll from iconReader and handle potential error
+			{
+				icon, err := io.ReadAll(iconReader)
+				if err != nil {
+					panic(err)
+				}
+				modColumns["icon"] = icon
+			}
 			modColumns["icon_type"] = params.IconType
 		}
 
