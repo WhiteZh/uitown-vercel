@@ -10,7 +10,7 @@ playedOA.value = true;
 </script>
 
 <template>
-  <OpeningAnimation v-if="displayOA"/>
+<!--  <OpeningAnimation v-if="displayOA"/>-->
   <NavigationBar/>
   <div class="mx-auto mt-32 max-w-screen-2xl px-5 flex flex-row text-white">
     <div id="house-of-ui-img" class="lg:block hidden"></div>
