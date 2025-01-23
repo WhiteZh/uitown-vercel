@@ -17,6 +17,7 @@ let router = useRouter();
   </Teleport>
   <div class="px-4 pt-4 flex flex-row justify-between items-end" id="navbar">
     <RouterLink class="me-10" to="/"><img src="@/assets/logo.png" alt="UITOWN" class="h-12"/></RouterLink>
+    <RouterLink :to="{name: 'browse'}" class="font-[Cooljazz] text-white hover:text-gray-300 text-sm italic me-7 -mb-0.5">Browse</RouterLink>
     <a href="#" class="font-[Cooljazz] text-white hover:text-gray-300 text-sm italic me-7 -mb-0.5">Information</a>
     <a href="#" class="font-[Cooljazz] text-white hover:text-gray-300 text-sm italic me-7 -mb-0.5">Recommendation</a>
     <span class="flex-grow"></span>
