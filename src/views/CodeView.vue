@@ -6,6 +6,7 @@ import {useRoute, useRouter} from "vue-router";
 import {createCSSStyle, deleteCSSStyle, getCSSByIds, updateCSSStyle} from "@/api";
 import {user, notifications} from "@/globs";
 import {cssCategories, CSSCategory, User} from "@/constants";
+import SubmitButton from "@/components/SubmitButton.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -138,7 +139,12 @@ onMounted(() => {
 <!--        <label class="text-white me-8 font-bold">Name</label>-->
         <input class="h-12 rounded-full w-52 text-sm px-3 text-center font-mono" ref="nameInput" placeholder="name"/>
       </div>
-      <div class="bg-[#1ac8db] px-4 h-12 flex items-center rounded-full text-white cursor-pointer tracking-widest text-base" @click="submit()">SUBMIT</div>
+      <SubmitButton
+          class="bg-[#1ac8db] disabled:bg-zinc-500 px-4 h-12 flex items-center rounded-full text-white tracking-widest text-base"
+          :f="submit"
+      >
+        SUBMIT
+      </SubmitButton>
       <div class="flex-grow flex justify-end items-center w-1/2">
 <!--        <label class="text-[1.2rem] text-white me-8 font-bold">Type</label>-->
         <select class="h-12 rounded-full w-40 px-3 text-center font-mono text-sm" ref="categoryInput" @change="categoryInput.classList.remove('text-gray-400')">

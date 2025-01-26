@@ -3,9 +3,11 @@ import {ref, inject, onMounted, Ref} from "vue";
 import {sha256} from "js-sha256";
 import {getUserById, getUserIdByLoginInfo} from "@/api";
 import {notifications, user} from "@/globs";
+import SubmitButton from "@/components/SubmitButton.vue";
 
 const emailInput = ref() as Ref<HTMLInputElement>;
 const passwordInput = ref() as Ref<HTMLInputElement>;
+const loginButton = ref() as Ref<HTMLButtonElement>;
 
 const emits = defineEmits(['login']);
 
@@ -54,9 +56,14 @@ onMounted(() => {
         <input placeholder="username/email" class="h-11 w-80 rounded-full my-1.5 ms-1.5 outline-0 ps-0.5 font-mono text-xs text-center" ref="emailInput" @keydown.enter="() => passwordInput.focus()">
       </div>
       <div class="flex flex-row mb-3 justify-center">
-        <input placeholder="password" type="password" class="h-11 w-80 rounded-full my-1.5 ms-1.5 outline-0 ps-0.5 font-mono text-xs text-center" ref="passwordInput" @keydown.enter="login">
+        <input placeholder="password" type="password" class="h-11 w-80 rounded-full my-1.5 ms-1.5 outline-0 ps-0.5 font-mono text-xs text-center" ref="passwordInput" @keydown.enter="() => loginButton.click()">
       </div>
-      <button class="mb-7 h-10 px-5 rounded-full bg-[#4e2780] text-white font-bold text-sm self-center my-2 cursor-pointer" @click="login">Login/Registration</button>
+      <SubmitButton
+          class="mb-7 h-10 px-5 rounded-full bg-[#4e2780] disabled:bg-zinc-500 text-white font-bold text-sm self-center my-2"
+          :f="login" ref="loginButton"
+      >
+        Login/Registration
+      </SubmitButton>
       <div class="buttons flex flex-row justify-center *:text-[#4e2780] *:w-8 *:h-8 *:cursor-pointer *:mx-0.5">
         <button>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github mx-auto"

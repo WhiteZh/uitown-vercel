@@ -6,11 +6,12 @@ import { html } from '@codemirror/lang-html';
 import { css } from '@codemirror/lang-css';
 import { iframeContent } from '@/constants'
 import {onMounted, Ref, ref, watch} from "vue";
+import SubmitButton from "@/components/SubmitButton.vue";
 
 const props = withDefaults(defineProps<{
   html: string,
   css: string,
-  deletion?: () => void,
+  deletion?: () => Promise<void>,
 }>(), {
   html: '',
   css: '',
@@ -98,7 +99,7 @@ onMounted(() => {
         <button class="w-32 h-16 rounded-full cursor-pointer bg-[#7ed957]" @click="activeTab = 'html'">HTML</button>
         <button class="w-32 h-16 rounded-full cursor-pointer bg-[#ff66c4]" @click="activeTab = 'css'">CSS</button>
         <div style="flex-grow: 1"/>
-        <button class="w-32 h-16 rounded-full cursor-pointer bg-[#550000]" @click="deletion" v-if="deletion !== undefined">Delete</button>
+        <SubmitButton class="w-32 h-16 rounded-full bg-[#550000] disabled:bg-zinc-500" :f="deletion" v-if="deletion !== undefined">Delete</SubmitButton>
       </div>
       <div class="flex-grow bg-[#272727] pt-1 overflow-scroll" ref="htmlEditor" :style="{display: activeTab === 'html' ? 'block' : 'none'}"></div>
       <div class="flex-grow bg-[#272727] pt-1 overflow-scroll" ref="cssEditor" :style="{display: activeTab === 'css' ? 'block' : 'none'}"></div>
