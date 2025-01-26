@@ -44,15 +44,15 @@ let CSS_attribute = ref<{
   {name: 'Loaders', url: {name: 'browse', params: {content_type: 'css', category: 'loader'}}, colors: ['#8c52ff', '#00bf63']},
   {name: 'Cards', url: {name: 'browse', params: {content_type: 'css', category: 'card'}}, colors: ['#5170ff', '#ff66c4']},
   {name: 'Inputs', url: {name: 'browse', params: {content_type: 'css', category: 'input'}}, colors: ['#5de0e6', '#004aad']},
-  {name: 'Transitions', url:{name: 'browse', params: {content_type: 'css', category: 'transition'}}, colors: ['#004add', '#cb6ce6']},
+  // {name: 'Transitions', url:{name: 'browse', params: {content_type: 'css', category: 'transition'}}, colors: ['#004add', '#cb6ce6']},
   {name: 'Special Effects', url: {name: 'browse', params: {content_type: 'css', category: 'special effect'}}, colors: ['#0097b2', '#7ed957']}
 ]);
-let JS_attribute = ref([
-  {name: 'Mouse Effect', url: {name: 'browse'}, colors: ['#8c52ff', '#ff914d']},
-  {name: 'Background', url: {name: 'browse'}, colors: ['#ff5757', '#8c52ff']},
-  {name: 'Menu', url: {name: 'browse'}, colors: ['#8c52ff', '#5ce1e6']},
-  {name: 'Visible Chart', url: {name: 'browse'}, colors: ['#8c52ff', '#00bf63']},
-]);
+// let JS_attribute = ref([
+//   {name: 'Mouse Effect', url: {name: 'browse'}, colors: ['#8c52ff', '#ff914d']},
+//   {name: 'Background', url: {name: 'browse'}, colors: ['#ff5757', '#8c52ff']},
+//   {name: 'Menu', url: {name: 'browse'}, colors: ['#8c52ff', '#5ce1e6']},
+//   {name: 'Visible Chart', url: {name: 'browse'}, colors: ['#8c52ff', '#00bf63']},
+// ]);
 
 </script>
 
@@ -66,7 +66,7 @@ let JS_attribute = ref([
     <div class="pe-36 flex flex-col ms-5 items-stretch">
       <DropDown :self_url="{name: 'browse'}">All</DropDown>
       <DropDown :list="CSS_attribute" :self_url="{name: 'browse', params: {content_type: 'css'}}">CSS</DropDown>
-      <DropDown :list="JS_attribute" :self_url="{name: 'browse'}">JavaScript</DropDown>
+<!--      <DropDown :list="JS_attribute" :self_url="{name: 'browse'}">JavaScript</DropDown>-->
     </div>
     <DisplayMenu :contentType="contentType" :category="category" class="pe-20"/>
   </div>

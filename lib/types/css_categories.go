@@ -14,7 +14,7 @@ const (
 	CssCategoryCard
 	CssCategoryLoader
 	CssCategoryInput
-	CssCategoryTransition
+	//CssCategoryTransition
 	CssCategorySpecialEffect
 )
 
@@ -32,8 +32,8 @@ func ConvertStringToCssCategory(s string) (CssCategoryType, error) {
 		return CssCategoryLoader, nil
 	case "input":
 		return CssCategoryInput, nil
-	case "transition":
-		return CssCategoryTransition, nil
+	//case "transition":
+	//	return CssCategoryTransition, nil
 	case "special effect":
 		return CssCategorySpecialEffect, nil
 	default:
@@ -55,8 +55,8 @@ func ConvertCssCategoryToString(c CssCategoryType) string {
 		return "loader"
 	case CssCategoryInput:
 		return "input"
-	case CssCategoryTransition:
-		return "transition"
+	//case CssCategoryTransition:
+	//	return "transition"
 	case CssCategorySpecialEffect:
 		return "special effect"
 	default:

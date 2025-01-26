@@ -94,7 +94,7 @@ export const cssCategories = [
     "loader",
     "card",
     "input",
-    "transition",
+    // "transition",
     "special effect",
 ] as const;
 export type CSSCategory = typeof cssCategories[number];
