@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import NavigationBar from "@/components/NavigationBar.vue";
-import DropDown from "@/components/browse/DropDown.vue";
 import DisplayMenu from "@/components/DisplayMenu.vue";
 import {useRoute, useRouter} from "vue-router";
 import {CSSCategory, isCSSCategory} from "@/constants";
@@ -47,28 +46,21 @@ let CSS_attribute = ref<{
   // {name: 'Transitions', url:{name: 'browse', params: {content_type: 'css', category: 'transition'}}, colors: ['#004add', '#cb6ce6']},
   {name: 'Special Effects', url: {name: 'browse', params: {content_type: 'css', category: 'special effect'}}, colors: ['#0097b2', '#7ed957']}
 ]);
-// let JS_attribute = ref([
-//   {name: 'Mouse Effect', url: {name: 'browse'}, colors: ['#8c52ff', '#ff914d']},
-//   {name: 'Background', url: {name: 'browse'}, colors: ['#ff5757', '#8c52ff']},
-//   {name: 'Menu', url: {name: 'browse'}, colors: ['#8c52ff', '#5ce1e6']},
-//   {name: 'Visible Chart', url: {name: 'browse'}, colors: ['#8c52ff', '#00bf63']},
-// ]);
 
 </script>
 
 <template>
-  <NavigationBar/>
-  <div class="py-0 px-60 text-[#D0C3F1]">
-    <h3 class="text-2xl mt-7 mb-1.5 mx-0 font-bold">To Select</h3>
-    <h6 class="font-[Cooljazz] tracking-[0.2rem] font-thin italic indent-8 my-3 mx-0 text-xs">Choose the code of your choice</h6>
-  </div>
-  <div class="flex flex-row flex-grow">
-    <div class="pe-36 flex flex-col ms-5 items-stretch">
-      <DropDown :self_url="{name: 'browse'}">All</DropDown>
-      <DropDown :list="CSS_attribute" :self_url="{name: 'browse', params: {content_type: 'css'}}">CSS</DropDown>
-<!--      <DropDown :list="JS_attribute" :self_url="{name: 'browse'}">JavaScript</DropDown>-->
+  <div class="flex flex-col items-stretch justify-stretch">
+    <NavigationBar/>
+    <div class="flex flex-row items-stretch pt-5 flex-grow">
+      <div class="pt-5 min-w-48 px-5">
+        <RouterLink :to="{name: 'browse'}" class="text-white text-lg font-thin">All</RouterLink>
+      </div>
+      <div class="flex-grow px-5 flex flex-col items-stretch">
+        <h1 class="text-3xl my-7 font-medium text-primary px-2">Browsing All</h1>
+        <DisplayMenu :contentType="contentType" :category="category" class="flex-grow"/>
+      </div>
     </div>
-    <DisplayMenu :contentType="contentType" :category="category" class="pe-20"/>
   </div>
 
 </template>

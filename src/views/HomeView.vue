@@ -16,9 +16,9 @@ playedOA.value = true;
     <div id="house-of-ui-img" class="lg:block hidden"></div>
     <div class="max-w-[48rem] px-10">
       <h5 class="font-thin tracking-widest mt-12 text-sm">HI I'M UI-TOWN</h5>
-      <h1 class="font-thin text-7xl text-left text-[#D0C3F1] mt-16">A town of UI which brings your design to life.</h1>
+      <h1 class="font-thin text-7xl text-left text-primary mt-16">A town of UI which brings your design to life.</h1>
       <h4 class="tracking-widest leading-9 text-lg max-w-lg ps-1.5 font-[Cooljazz] mt-16">"At UI-town, we offer a vast array of CSS and JS animations to elevate your web projects. Our dynamic animations and interactive effects make your user interfaces not just functional but truly captivating."</h4>
-      <RouterLink :to="{name: 'browse'}" class="ms-0.5 w-40 mt-8 py-4 text-center rounded-full inline-block bg-[#D0C3F1] text-[rgb(85,26,139)] hover:text-white">Enter</RouterLink>
+      <RouterLink :to="{name: 'browse'}" class="ms-0.5 w-40 mt-8 py-4 text-center rounded-full inline-block bg-primary text-stress hover:text-white">Enter</RouterLink>
     </div>
   </div>
 </template>
