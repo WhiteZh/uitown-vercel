@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {inject, onMounted, Ref, ref} from "vue";
+import {inject, onMounted, Ref, ref, watch} from "vue";
 import DisplayCard from "@/components/DisplayCard.vue";
 import {CSSCategory, CSSStyle, Notification} from "@/constants";
 import {getCSSByIds, getValidCSSIds} from "@/api";
@@ -14,7 +14,8 @@ const props = withDefaults(defineProps<{
 
 const list: Ref<CSSStyle[]> = ref([]);
 
-onMounted(async function() {
+async function fetchCSSs() {
+  list.value = [];
   try {
     let ids = await getValidCSSIds({
       category: props.category
@@ -24,7 +25,12 @@ onMounted(async function() {
     notifications.push({message: String(e), color: 'red'});
     console.log(e);
   }
-});
+}
+
+onMounted(fetchCSSs);
+
+watch(() => props.category, fetchCSSs);
+
 </script>
 
 <template>
