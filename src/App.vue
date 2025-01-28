@@ -19,7 +19,7 @@ onMounted(() => {
       </svg>
     </div>
   </div>
-  <RouterView :key="$route.fullPath"/>
+  <RouterView/>
 </template>
 
 

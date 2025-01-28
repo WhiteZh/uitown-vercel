@@ -6,7 +6,6 @@ import {getCSSByIds, getValidCSSIds} from "@/api";
 import {notifications} from "@/globs";
 
 const props = withDefaults(defineProps<{
-  contentType?: "css" | "js",
   category?: CSSCategory,
   hasSearcher?: boolean,
 }>(), {
