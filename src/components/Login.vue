@@ -49,7 +49,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-[368px] w-[560px] absolute bg-[linear-gradient(90deg,#8c52ff,#5ce1e6)] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[2rem] flex flex-col">
+  <div class="bg-[linear-gradient(90deg,#8c52ff,#5ce1e6)] rounded-[2rem] flex flex-col">
     <div class="font-['Zhi_Mang_Xing'] text-5xl text-white py-4 self-center mb-5">UITOWN</div>
     <div class="flex flex-col">
       <div class="flex flex-row mb-3 justify-center">

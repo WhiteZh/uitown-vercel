@@ -11,9 +11,10 @@ let router = useRouter();
 </script>
 
 <template>
-  <div class="z-10 absolute h-screen w-screen opacity-30 bg-black" v-if="openLogin" @click="openLogin = !openLogin"></div>
   <Teleport to="#app">
-    <Login v-if="openLogin" class="z-10" v-on:login="(v) => openLogin = v ? false : openLogin"/>
+    <div class="z-10 fixed left-0 top-0 h-dvh w-dvw opacity-30 bg-black" v-if="openLogin" @click="openLogin = !openLogin"></div>
+    <Login v-if="openLogin" v-on:login="(v) => openLogin = v ? false : openLogin"
+           class="z-10 h-[368px] w-[560px] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"/>
   </Teleport>
   <div class="px-4 pt-4 flex flex-row justify-between items-end" id="navbar">
     <RouterLink class="me-10" to="/"><img src="@/assets/logo.png" alt="UITOWN" class="h-12"/></RouterLink>

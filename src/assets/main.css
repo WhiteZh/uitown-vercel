@@ -13,7 +13,7 @@ body {
     @apply bg-neutral-900;
     font-family: Roboto, sans-serif;
     scrollbar-width: none;
-    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .font-Roboto {
