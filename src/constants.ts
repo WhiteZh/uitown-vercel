@@ -32,6 +32,7 @@ export const iframeContent = (html: string, css: string) => `
         background-color: #2b2a2a;
         height: 100vh;
         width: 100vw;
+        overflow: hidden;
       }
       ${css}
     </style>
