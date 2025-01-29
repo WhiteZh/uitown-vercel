@@ -1,5 +1,6 @@
 @import "bootstrap-icons";
-@import "@fontsource/roboto";
+@import "@fontsource/roboto/300.css";
+@import "@fontsource/roboto/400.css";
 @import "@fontsource/roboto/500.css";
 
 @tailwind base;
@@ -12,6 +13,10 @@ body {
     font-family: Roboto, sans-serif;
     scrollbar-width: none;
     min-height: 100vh;
+}
+
+.font-Roboto {
+    font-family: Roboto, sans-serif;
 }
 
 @font-face {

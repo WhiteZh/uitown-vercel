@@ -31,7 +31,7 @@ let category = computed<CSSCategory | undefined>(() => match(route.params['categ
       <div class="pt-16 min-w-48 flex flex-col items-stretch gap-2 tracking-wide" ref="">
         <RouterLink v-for="cssCategory in [undefined, ...cssCategories]" :key="cssCategory ?? ''"
                     :to="{name: 'browse', params: {category: cssCategory ?? ''}}"
-                    class="text-white text-lg rounded-lg hover:bg-neutral-750 px-2"
+                    class="text-white text-md rounded-lg hover:bg-neutral-750 px-2 py-1.5 font-light"
                     :class="{'bg-neutral-800': cssCategory === category}"
         >{{ StringUtilsWord.formatWords(cssCategory ?? 'all') }}</RouterLink>
       </div>
