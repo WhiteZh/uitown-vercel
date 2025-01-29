@@ -29,10 +29,11 @@ let category = computed<CSSCategory | undefined>(() => match(route.params['categ
     <NavigationBar/>
     <div class="flex flex-row items-stretch pt-5 flex-grow px-5 gap-7 mb-4">
       <div class="pt-16 min-w-48 flex flex-col items-stretch gap-2 tracking-wide" ref="">
-        <RouterLink v-for="cssCategory in ['', ...cssCategories]" :key="cssCategory" :to="{name: 'browse', params: {category:cssCategory}}"
+        <RouterLink v-for="cssCategory in [undefined, ...cssCategories]" :key="cssCategory ?? ''"
+                    :to="{name: 'browse', params: {category: cssCategory ?? ''}}"
                     class="text-white text-lg rounded-lg hover:bg-neutral-750 px-2"
-                    :class="{'bg-neutral-800': (cssCategory === '' ? undefined : cssCategory) === category}"
-        >{{ cssCategory === '' ? 'All' : StringUtilsWord.formatWords(cssCategory) }}</RouterLink>
+                    :class="{'bg-neutral-800': cssCategory === category}"
+        >{{ StringUtilsWord.formatWords(cssCategory ?? 'all') }}</RouterLink>
       </div>
       <div class="flex-grow flex flex-col items-stretch">
         <h1 class="text-3xl my-7 font-medium text-primary px-2">Browsing {{StringUtilsWord.formatWords(category ?? 'all')}}</h1>
