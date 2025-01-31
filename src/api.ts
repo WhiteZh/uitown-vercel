@@ -95,7 +95,7 @@ export async function getUserIdByLoginInfo(email: string, password_hashed: strin
     return id > 0 ? id : undefined;
 }
 
-export async function createCSSStyle(userID: number, password_hashed: string, name: string, category: string, html: string, css: string): Promise<void> {
+export async function createCSSStyle(userID: number, password_hashed: string, name: string, category: CSSCategory, html: string, css: string): Promise<void> {
     let res = await fetch('/api/css', {
         method: 'POST',
         headers: {

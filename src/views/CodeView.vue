@@ -7,7 +7,7 @@ import {createCSSStyle, deleteCSSStyle, getCSSByIds, updateCSSStyle} from "@/api
 import {notifications, user} from "@/globs";
 import {cssCategories, CSSCategory} from "@/constants";
 import SubmitButton from "@/components/SubmitButton.vue";
-import {match, P} from "ts-pattern";
+import {isMatching, match, P} from "ts-pattern";
 
 const route = useRoute();
 const router = useRouter();
@@ -72,24 +72,8 @@ watch(() => route.fullPath, async () => {
       .otherwise(() => undefined);
 }, {immediate: true});
 
-onMounted(() => {
-  watch([html, css, authorID, name, category], async () => {
-    // NECESSARY! If run immediate after watched things change, DOM may not be updated yet.
-    // Therefore, `nameInput` and `categoryInput` won't exist (they depend on `authorID` matches `user.id`).
-    await nextTick();
-
-    if (mode.value === 'view') {
-      if (nameInput.value === undefined || categoryInput.value === undefined) return;
-
-      nameInput.value.value = name.value;
-    }
-  }, {immediate: true});
-});
-
 
 async function submit() {
-  if (nameInput.value === undefined || categoryInput.value === undefined) return;
-
   console.log(user);
   if (!user.value) {
     notifications.push({message: 'Not logged in', color: 'yellow'});
@@ -97,21 +81,29 @@ async function submit() {
   }
   try {
     if (mode.value === "create") {
+      if (!isMatching(P.union(...cssCategories), category.value)) {
+        notifications.push({message: "Please select a category before submit", color: "yellow"});
+        return;
+      }
       await createCSSStyle(
           user.value.id,
           user.value.password_hashed,
-          nameInput.value.value,
-          categoryInput.value.value,
+          name.value,
+          category.value,
           html.value,
           css.value
       );
       notifications.push({message: 'Successfully created a new style'});
     } else {
+      if (!isMatching(P.union(...cssCategories), category.value)) {
+        notifications.push({message: "Please select a category before submit", color: "yellow"});
+        return;
+      }
       let err = await updateCSSStyle(codeID.value!, user.value.password_hashed, {
-        name: nameInput.value.value,
+        name: name.value,
         html: html.value,
         css: css.value,
-        category: categoryInput.value.value as CSSCategory,
+        category: category.value,
       });
 
       if (err) {
@@ -160,7 +152,11 @@ const del = async () => {
         v-if="mode === 'create' || user !== undefined && authorID === user.id"
     >
       <div class="flex-grow flex justify-start items-center w-1/2">
-        <input class="h-12 rounded-full w-52 text-sm px-3 text-center font-mono" ref="nameInput" placeholder="name"/>
+        <input
+            class="h-12 rounded-full w-52 text-sm px-3 text-center font-mono"
+            ref="nameInput"
+            v-model="name"
+            placeholder="name"/>
       </div>
       <SubmitButton
           class="bg-[#1ac8db] disabled:bg-zinc-500 px-4 h-12 flex items-center rounded-full text-white tracking-widest text-base"
