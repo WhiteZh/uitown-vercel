@@ -55,14 +55,14 @@ var methodRouter = utils.MethodRouter{
 			Category   string `json:"category"`
 		}
 
-		var res = make([]Response, len(ids))
+		var res = make([]Response, 0)
 
 		for i := 0; rows.Next(); i++ {
 			t := Response{}
 
 			utils.ScanOrPanic(rows, &t.Id, &t.Name, &t.ViewedTime, &t.AuthorId, &t.HTML, &t.CSS, &t.Category)
 
-			res[i] = t
+			res = append(res, t)
 		}
 
 		utils.SetContentTypeJSON(w)

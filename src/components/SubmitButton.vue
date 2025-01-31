@@ -7,14 +7,14 @@ const props = defineProps<{
   f: () => Promise<void>
 }>();
 
-const button = ref() as Ref<HTMLButtonElement>;
+const button = ref<HTMLButtonElement>();
 
-defineExpose(button);
+defineExpose({buttonRef: button});
 
 async function submit() {
-  button.value.setAttribute("disabled", "disabled");
+  button.value?.setAttribute("disabled", "disabled");
   await props.f();
-  button.value.removeAttribute("disabled");
+  button.value?.removeAttribute("disabled");
 }
 </script>
 

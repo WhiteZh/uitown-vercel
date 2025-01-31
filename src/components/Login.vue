@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, inject, onMounted, Ref} from "vue";
+import {ref, inject, onMounted, Ref, useTemplateRef} from "vue";
 import {sha256} from "js-sha256";
 import {getUserById, getUserIdByLoginInfo} from "@/api";
 import {notifications, user} from "@/globs";
@@ -7,7 +7,7 @@ import SubmitButton from "@/components/SubmitButton.vue";
 
 const emailInput = ref() as Ref<HTMLInputElement>;
 const passwordInput = ref() as Ref<HTMLInputElement>;
-const loginButton = ref() as Ref<HTMLButtonElement>;
+const loginButton = ref<{buttonRef: HTMLButtonElement}>();
 
 const emits = defineEmits(['login']);
 
@@ -58,7 +58,7 @@ onMounted(() => {
                ref="emailInput" @keydown.enter="() => passwordInput.focus()"/>
       </div>
       <div class="flex flex-row mb-3 justify-center">
-        <input placeholder="password" type="password" class="h-11 w-80 rounded-full my-1.5 ms-1.5 outline-0 ps-0.5 font-mono text-xs text-center" ref="passwordInput" @keydown.enter="() => loginButton.click()">
+        <input placeholder="password" type="password" class="h-11 w-80 rounded-full my-1.5 ms-1.5 outline-0 ps-0.5 font-mono text-xs text-center" ref="passwordInput" @keydown.enter="() => loginButton?.buttonRef.click()">
       </div>
       <SubmitButton
           class="mb-7 h-10 px-5 rounded-full bg-stress disabled:bg-zinc-500 text-white font-bold text-sm self-center my-2"

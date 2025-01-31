@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { EditorView, basicSetup } from "codemirror";
+import {EditorView, basicSetup} from "codemirror";
 import { oneDark } from "@codemirror/theme-one-dark";
 import {EditorState, Extension} from "@codemirror/state";
 import { html } from '@codemirror/lang-html';
@@ -27,17 +27,34 @@ const cssEditor = ref() as Ref<HTMLDivElement>;
 let iframeValue = ref(iframeContent('', ''));
 
 onMounted(() => {
+  let htmlView: EditorView | null = null;
+  let cssView: EditorView | null = null;
+
   // number 12 is autocompletion
-  let setupExtensions: Extension[] = (basicSetup as Extension[]).filter((_, i) => ![4, 12].includes(i));
-  const htmlExtensions = [setupExtensions, oneDark, html()];
-  const cssExtensions = [setupExtensions, oneDark, css()];
+  let setupExtensions: Extension[] = [
+      ...(basicSetup as Extension[]).filter((_, i) => ![4, 12].includes(i)),
+      oneDark,
+      EditorView.domEventHandlers({
+        change: () => {
+          if (htmlView === null || cssView === null) return;
+
+          let html = htmlView.state.doc.toString();
+          let css = cssView.state.doc.toString();
+          iframeValue.value = iframeContent(html, css);
+          emit('update:html', html);
+          emit('update:css', css);
+        }
+      })
+  ];
+  const htmlExtensions = [setupExtensions, html()];
+  const cssExtensions = [setupExtensions, css()];
 
   const htmlState = EditorState.create({
     doc: props.html,
     extensions: htmlExtensions,
   });
 
-  const htmlView = new EditorView({
+  htmlView = new EditorView({
     state: htmlState,
     parent: htmlEditor.value,
   });
@@ -47,7 +64,7 @@ onMounted(() => {
     extensions: cssExtensions,
   });
 
-  const cssView = new EditorView({
+  cssView = new EditorView({
     state: cssState,
     parent: cssEditor.value,
   });
@@ -92,8 +109,7 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-row">
-    <iframe class="w-1/2" :srcdoc="iframeValue">
-    </iframe>
+    <iframe class="w-1/2" :srcdoc="iframeValue"/>
     <div class="w-1/2 flex flex-col">
       <div class="min-h-20 max-h-20 bg-[#545454] flex flex-row justify-start items-center px-8 gap-6 text-white text-[1.2rem] font-[Cooljazz] italic tracking-[0.3rem]">
         <button class="w-32 h-16 rounded-full cursor-pointer bg-[#7ed957]" @click="activeTab = 'html'">HTML</button>
