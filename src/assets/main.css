@@ -41,28 +41,34 @@ body {
     font-style: normal;
 }
 
-.cm-editor {
+.no-scrollbar {
+    scrollbar-width: none;
+}
+
+
+/*for code mirror styling*/
+.code-display .cm-editor {
     background-color: transparent !important;
 }
 
-.cm-focused {
+.code-display .cm-focused {
     outline: none !important;
 }
 
-.cm-gutters {
-    background-color: #272727 !important;
+.code-display .cm-gutters {
+    background-color: #262626 !important;
     border: none !important;
 }
 
-.cm-activeLineGutter {
+.code-display .cm-activeLineGutter {
     background-color: transparent !important;
 }
 
-.cm-activeLine {
+.code-display .cm-activeLine {
     background-color: transparent !important;
 }
 
-.cm-scroller {
+.code-display .cm-scroller {
     scrollbar-width: thin;
     scrollbar-color: #545454 #00000000;
 }

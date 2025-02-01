@@ -72,7 +72,6 @@ watch(() => route.fullPath, async () => {
       .otherwise(() => undefined);
 }, {immediate: true});
 
-
 async function submit() {
   console.log(user);
   if (!user.value) {
@@ -148,23 +147,17 @@ const del = async () => {
     <!--      <span class="me-0.5">Go Back</span>-->
     <!--    </RouterLink>-->
     <div
-        class="bg-[#2b2a28] flex flex-row px-20 h-20 rounded-full mt-4 items-center justify-between text-[1.2rem] -mx-0.5"
+        class="bg-neutral-800 rounded-full px-6 h-20 -mx-0.5 flex flex-row justify-start items-center gap-4"
         v-if="mode === 'create' || user !== undefined && authorID === user.id"
     >
-      <div class="flex-grow flex justify-start items-center w-1/2">
+      <div class="flex justify-start items-center">
         <input
             class="h-12 rounded-full w-52 text-sm px-3 text-center font-mono"
             ref="nameInput"
             v-model="name"
             placeholder="name"/>
       </div>
-      <SubmitButton
-          class="bg-[#1ac8db] disabled:bg-zinc-500 px-4 h-12 flex items-center rounded-full text-white tracking-widest text-base"
-          :f="submit"
-      >
-        SUBMIT
-      </SubmitButton>
-      <div class="flex-grow flex justify-end items-center w-1/2">
+      <div class="flex justify-end items-center">
         <select
             ref="categoryInput"
             class="h-12 rounded-full w-40 px-3 text-center font-mono text-sm"
@@ -175,12 +168,24 @@ const del = async () => {
           <option v-for="cate in cssCategories">{{ cate }}</option>
         </select>
       </div>
+      <SubmitButton
+          class="bg-highlight1 disabled:bg-zinc-500 px-4 h-12 flex items-center rounded-full text-white tracking-widest text-base"
+          :f="submit"
+      >
+        SUBMIT
+      </SubmitButton>
+      <SubmitButton
+          class="bg-red-800 disabled:bg-zinc-500 px-4 h-12 flex items-center rounded-full text-white tracking-widest text-base"
+          :f="del"
+          v-if="user !== undefined && authorID !== undefined && user.id === authorID"
+      >
+        DELETE
+      </SubmitButton>
     </div>
 
     <CodeDisplay
         class="rounded-2xl overflow-hidden h-[70svh] mt-4 mx-auto"
-        v-model:html="html" v-model:css="css"
-        :deletion="user !== undefined && authorID !== undefined && user.id === authorID ? del : undefined"/>
+        v-model:html="html" v-model:css="css"/>
   </div>
 </template>
 

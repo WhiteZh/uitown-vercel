@@ -29,7 +29,7 @@ export const iframeContent = (html: string, css: string) => `
         justify-content: center;
         align-items: center;
         margin: 0;
-        background-color: #2b2a2a;
+        background-color: #2a2a2a;
         height: 100vh;
         width: 100vw;
         overflow: hidden;
